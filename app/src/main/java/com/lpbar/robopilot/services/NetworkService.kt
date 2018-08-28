@@ -8,6 +8,9 @@ interface NetworkServiceInterface {
     var port: String
 
     fun sendStopMotorsAction(callback: ((Response) -> Unit))
+    fun sendStopExplorationAction(callback: ((Response) -> Unit))
+    fun sendStartExplorationAction(callback: ((Response) -> Unit))
+    fun sendGoToPointAction(x: Double, y: Double, callback: ((Response) -> Unit))
 }
 
 enum class Endpoints(val path: String) {
@@ -25,14 +28,55 @@ class NetworkService(
     private val client: OkHttpClient = OkHttpClient()
 
     private val hostAddress: String
-        get() = "$address:$port"
+        get() = "http://$address:$port"
 
     override fun sendStopMotorsAction(callback: ((Response) -> Unit)) {
-        val request = Request.Builder().url(hostAddress + Endpoints.StopMotors.path).build()
+        val body: String = "{}"
+        val request = Request.Builder().url(hostAddress + Endpoints.StopMotors.path)
+                .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body))
+                .build()
 
+        executeRequest(request, callback)
+    }
+
+    override fun sendStartExplorationAction(callback: (Response) -> Unit) {
+        val body: String = "{}"
+        val request = Request.Builder().url(hostAddress + Endpoints.StartExploration.path)
+                .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body))
+                .build()
+
+        executeRequest(request, callback)
+    }
+
+    override fun sendStopExplorationAction(callback: (Response) -> Unit) {
+        val body: String = "{}"
+        val request = Request.Builder().url(hostAddress + Endpoints.StopExploration.path)
+                .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body))
+                .build()
+
+        executeRequest(request, callback)
+    }
+
+    override fun sendGoToPointAction(x: Double, y: Double, callback: (Response) -> Unit) {
+        val body: String = """"
+            {
+                x: $x,
+                y: $y
+            }
+            """"
+        val request = Request.Builder()
+                .url(hostAddress + Endpoints.ManualPose.path)
+                .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body))
+                .build()
+
+        executeRequest(request, callback)
+    }
+
+    private fun executeRequest(request: Request, callback: ((Response) -> Unit)) {
         client.newCall(request).enqueue(object: Callback {
             override fun onFailure(call: Call?, e: IOException?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                System.out.println(call.toString())
+                System.out.println(e.toString())
             }
 
             override fun onResponse(call: Call?, response: Response?) {

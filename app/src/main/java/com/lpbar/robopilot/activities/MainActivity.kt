@@ -54,26 +54,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onStopMotors() {
-        networkService.sendStopMotorsAction { printResponse(it) }
+        networkService.sendStopMotorsAction(callback = {printResponse(it)}, error = {printMessage(it)})
     }
 
     private fun onStopExploration() {
-        networkService.sendStopExplorationAction { printResponse(it) }
+        networkService.sendStopExplorationAction(callback = {printResponse(it)}, error = {printMessage(it)})
     }
 
     private fun onStartExploration() {
-        networkService.sendStartExplorationAction { printResponse(it) }
+        networkService.sendStartExplorationAction(callback = {printResponse(it)}, error = {printMessage(it)})
     }
 
     private fun onManualPose() {
         networkService.sendGoToPointAction(
                 xCoordEditText.text.toString().toDouble(),
-                yCoordEditText.text.toString().toDouble()
-        ) { printResponse(it) }
+                yCoordEditText.text.toString().toDouble(),
+                callback = {printResponse(it)}, error = {printMessage(it)})
     }
 
     private fun printResponse(response: Response) {
-        val consoleText = consoleOutputTextView.text
-        consoleOutputTextView.text = response.toString() + consoleText
+        runOnUiThread {
+            val consoleText = consoleOutputTextView.text
+            val responseString = response.toString()
+            consoleOutputTextView.text = "$responseString\n$consoleText"
+        }
+    }
+
+    private fun printMessage(message: String) {
+        runOnUiThread {
+            val consoleText = consoleOutputTextView.text
+            consoleOutputTextView.text = "$message\n$consoleText"
+        }
     }
 }

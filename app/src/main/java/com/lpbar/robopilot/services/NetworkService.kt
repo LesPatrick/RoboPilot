@@ -58,15 +58,13 @@ class NetworkService(
     }
 
     override fun sendGoToPointAction(x: Double, y: Double, callback: (Response) -> Unit, error: ((String) -> Unit)) {
-        val body: String = """"
-            {
-                x: $x,
-                y: $y
-            }
-            """"
+        val body = FormBody.Builder()
+                .add("x", x.toString())
+                .add("y", y.toString())
+                .build()
         val request = Request.Builder()
                 .url(hostAddress + Endpoints.ManualPose.path)
-                .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body))
+                .put(body)
                 .build()
 
         executeRequest(request, callback, error)

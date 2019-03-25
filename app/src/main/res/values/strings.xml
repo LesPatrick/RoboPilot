@@ -6,6 +6,7 @@
     <string name="y_postiton">Y Coordinate</string>
     <string name="send">Send</string>
     <string name="stop_motors">Stop motors</string>
+    <string name="open_joypad">Open JoyPad</string>
     <string name="stop_exploration">Stop Exploration</string>
     <string name="start_exploration">Start Exploration</string>
 

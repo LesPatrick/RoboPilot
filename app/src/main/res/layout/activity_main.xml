@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.widget.ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="15dp"
-    tools:context="com.lpbar.robopilot.activities.MainActivity">
+<!--<android.widget.ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:padding="15dp"-->
+    <!--tools:context="com.lpbar.robopilot.activities.MainActivity">-->
 
     <android.support.v7.widget.LinearLayoutCompat
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        tools:context="com.lpbar.robopilot.activities.MainActivity">
 
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -88,6 +90,19 @@
             android:layout_height="wrap_content"
             android:text="@string/send" />
 
+        <io.github.controlwear.virtual.joystick.android.JoystickView
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/joystick"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            custom:JV_buttonColor="#FF6E40"
+            custom:JV_buttonSizeRatio="15%"
+            custom:JV_borderColor="#00796B"
+            custom:JV_backgroundColor="#009688"
+            custom:JV_borderWidth="4dp"
+            custom:JV_fixedCenter="false"/>
+
         <TextView
             android:id="@+id/consoleOutputTextView"
             android:layout_width="match_parent"
@@ -97,4 +112,4 @@
 
     </android.support.v7.widget.LinearLayoutCompat>
 
-</android.widget.ScrollView>
+<!--</android.widget.ScrollView>-->

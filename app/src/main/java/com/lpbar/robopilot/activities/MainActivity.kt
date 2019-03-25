@@ -13,7 +13,7 @@ import okhttp3.Response
 
 class MainActivity : AppCompatActivity() {
 
-    private var serverAddress: String = "0.0.0.0"
+    private var serverAddress: String = "192.168.0.213"
         set(value) { networkService.address = value }
 
     private var serverPort: String = "9090"
@@ -31,10 +31,10 @@ class MainActivity : AppCompatActivity() {
         sendManualPoseButton.setOnClickListener { onManualPose() }
         ipAddressEditText.addTextChangedListener( object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
             override fun afterTextChanged(p0: Editable?) {
                 serverAddress = p0.toString()
@@ -42,15 +42,32 @@ class MainActivity : AppCompatActivity() {
         })
         portEditText.addTextChangedListener( object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
             }
             override fun afterTextChanged(p0: Editable?) {
                 serverPort = p0.toString()
             }
         })
+        joystick.setOnMoveListener({ angle, strength ->
+            if (strength == 0) {
+                networkService.sendManualMotorAction(0.0, 0.0)
+                return@setOnMoveListener
+            }
+
+            var angleNorm = 0.0
+            var strengthNorm: Double = strength / 100.0
+            if (angle < 180) {
+                angleNorm = angle - 90.0
+            } else {
+                angleNorm = 270.0 - angle
+                strengthNorm *= -1
+            }
+
+            networkService.sendManualMotorAction(angleNorm / 90.0, strengthNorm)
+        }, 100)
     }
 
     private fun onStopMotors() {

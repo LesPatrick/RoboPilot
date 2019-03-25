@@ -11,13 +11,15 @@ interface NetworkServiceInterface {
     fun sendStopExplorationAction(callback: ((Response) -> Unit), error: ((String) -> Unit))
     fun sendStartExplorationAction(callback: ((Response) -> Unit), error: ((String) -> Unit))
     fun sendGoToPointAction(x: Double, y: Double, callback: ((Response) -> Unit), error: ((String) -> Unit))
+    fun sendManualMotorAction(angle: Double, strength: Double)
 }
 
 enum class Endpoints(val path: String) {
     StopMotors("/stop_motors"),
     ManualPose("/manual_pose"),
     StartExploration("/start_exploration"),
-    StopExploration("/stop_exploration")
+    StopExploration("/stop_exploration"),
+    OverrideMotors("/override_motors")
 }
 
 class NetworkService(
@@ -68,6 +70,20 @@ class NetworkService(
                 .build()
 
         executeRequest(request, callback, error)
+    }
+
+    override fun sendManualMotorAction(angle: Double, strength: Double) {
+        val body = FormBody.Builder()
+                .add("angle", angle.toString())
+                .add("strength", strength.toString())
+                .build()
+
+        val request = Request.Builder()
+                .url(hostAddress + Endpoints.OverrideMotors.path)
+                .put(body)
+                .build()
+
+        executeRequest(request, {}, {})
     }
 
     private fun executeRequest(request: Request, callback: ((Response) -> Unit), error: ((String) -> Unit)) {

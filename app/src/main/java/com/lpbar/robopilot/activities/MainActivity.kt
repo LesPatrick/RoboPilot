@@ -33,9 +33,12 @@ class MainActivity : AppCompatActivity(), SteeringFragment.OnFragmentInteraction
 
         openJoyPad.setOnClickListener { onOpenJoypad() }
         stopMotorsButton.setOnClickListener { onStopMotors() }
+        saveMapButton.setOnClickListener { onSaveMap() }
+        loadMapButton.setOnClickListener { onLoadMap() }
         stopExplorationButton.setOnClickListener { onStopExploration() }
         startExplorationButton.setOnClickListener { onStartExploration() }
         sendManualPoseButton.setOnClickListener { onManualPose() }
+        saveLocationButton.setOnClickListener { onSaveLocation() }
 
         ipAddressEditText.setText(serverAddress, TextView.BufferType.EDITABLE)
         portEditText.setText(serverPort, TextView.BufferType.EDITABLE)
@@ -68,6 +71,14 @@ class MainActivity : AppCompatActivity(), SteeringFragment.OnFragmentInteraction
         networkService.sendStopMotorsAction(callback = {printResponse(it)}, error = {printMessage(it)})
     }
 
+    private fun onSaveMap() {
+        networkService.sendSaveMapAction(callback = {printResponse(it)}, error = {printMessage(it)})
+    }
+
+    private fun onLoadMap() {
+        networkService.sendLoadMapAction(callback = {printResponse(it)}, error = {printMessage(it)})
+    }
+
     private fun onStopExploration() {
         networkService.sendStopExplorationAction(callback = {printResponse(it)}, error = {printMessage(it)})
     }
@@ -81,6 +92,10 @@ class MainActivity : AppCompatActivity(), SteeringFragment.OnFragmentInteraction
                 xCoordEditText.text.toString().toDouble(),
                 yCoordEditText.text.toString().toDouble(),
                 callback = {printResponse(it)}, error = {printMessage(it)})
+    }
+
+    private fun onSaveLocation() {
+        networkService.sendSaveLocation(locationNameEditText.text.toString(), callback = {printResponse(it)}, error = {printMessage(it)})
     }
 
     private fun onOpenJoypad() {

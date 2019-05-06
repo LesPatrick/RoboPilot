@@ -63,10 +63,34 @@
             android:text="@string/stop_motors" />
 
         <Button
+            android:id="@+id/saveMapButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_map" />
+
+        <Button
+            android:id="@+id/loadMapButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/load_map" />
+
+        <Button
             android:id="@+id/openJoyPad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/open_joypad" />
+
+        <EditText
+            android:id="@+id/locationNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/location_name" />
+
+        <Button
+            android:id="@+id/saveLocationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_location" />
         
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"

@@ -78,7 +78,7 @@
             android:id="@+id/mapSpinner"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            />
+            android:tooltipText="@string/map_spinner_tooltip"/>
 
         <Button
             android:id="@+id/loadMapButton"
@@ -96,7 +96,7 @@
             android:id="@+id/coordinatesSpinner"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            />
+            android:tooltipText="@string/location_spinner_tooltip"/>
         
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"

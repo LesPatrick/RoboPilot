@@ -1,0 +1,32 @@
+[
+  {
+    "name": "first floor",
+    "locations": [
+      {
+        "name": "important room",
+        "xPos": 1.5,
+        "yPos": 2.0
+      },
+      {
+        "name": "important room 2",
+        "xPos": 0.0,
+        "yPos": 2.0
+      }
+    ]
+  },
+  {
+    "name": "second floor",
+    "locations": [
+      {
+        "name": "important room",
+        "xPos": 1.5,
+        "yPos": 2.0
+      },
+      {
+        "name": "important room 2",
+        "xPos": 0.0,
+        "yPos": 2.0
+      }
+    ]
+  }
+]

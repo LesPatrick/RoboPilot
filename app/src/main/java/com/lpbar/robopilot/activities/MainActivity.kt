@@ -1,23 +1,23 @@
 package com.lpbar.robopilot.activities
 
-import android.content.Context
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.AttributeSet
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.lpbar.robopilot.R
 import com.lpbar.robopilot.fragments.SteeringFragment
-
-import com.lpbar.robopilot.services.*
-
+import com.lpbar.robopilot.services.LocationProvider
+import com.lpbar.robopilot.services.NetworkService
+import com.lpbar.robopilot.services.NetworkServiceInterface
 import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.Response
 
-class MainActivity : AppCompatActivity(), SteeringFragment.OnFragmentInteractionListener {
+class MainActivity : AppCompatActivity(), SteeringFragment.OnFragmentInteractionListener, AdapterView.OnItemSelectedListener {
     companion object {
         private var serverAddress: String = "192.168.0.213"
             set(value) { networkService.address = value }
@@ -26,6 +26,8 @@ class MainActivity : AppCompatActivity(), SteeringFragment.OnFragmentInteraction
             set(value) { networkService.port = value }
         var networkService: NetworkServiceInterface = NetworkService(serverAddress, serverPort)
     }
+
+    private val locationProvider = LocationProvider()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,10 +40,15 @@ class MainActivity : AppCompatActivity(), SteeringFragment.OnFragmentInteraction
         stopExplorationButton.setOnClickListener { onStopExploration() }
         startExplorationButton.setOnClickListener { onStartExploration() }
         sendManualPoseButton.setOnClickListener { onManualPose() }
-        saveLocationButton.setOnClickListener { onSaveLocation() }
 
         ipAddressEditText.setText(serverAddress, TextView.BufferType.EDITABLE)
         portEditText.setText(serverPort, TextView.BufferType.EDITABLE)
+
+        locationProvider.models?.let {
+            mapSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, it.map { x -> x.name })
+            mapSpinner.onItemSelectedListener = this
+            coordinatesSpinner.onItemSelectedListener = this
+        }
 
         ipAddressEditText.addTextChangedListener( object: TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -94,10 +101,6 @@ class MainActivity : AppCompatActivity(), SteeringFragment.OnFragmentInteraction
                 callback = {printResponse(it)}, error = {printMessage(it)})
     }
 
-    private fun onSaveLocation() {
-        networkService.sendSaveLocation(locationNameEditText.text.toString(), callback = {printResponse(it)}, error = {printMessage(it)})
-    }
-
     private fun onOpenJoypad() {
         val joypadFragment = SteeringFragment.newInstance()
         joypadFragment.show(supportFragmentManager, "joypadFgm")
@@ -120,5 +123,22 @@ class MainActivity : AppCompatActivity(), SteeringFragment.OnFragmentInteraction
             val consoleText = consoleOutputTextView.text
             consoleOutputTextView.text = "$message\n$consoleText"
         }
+    }
+
+    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+        if (p0 == mapSpinner) {
+            locationProvider.models?.let {
+                coordinatesSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, it[p2].locations.map { it.name })
+            }
+        } else if (p0 == coordinatesSpinner) {
+            locationProvider.models?.let {
+                val location = it[mapSpinner.selectedItemPosition].locations[p2]
+                xCoordEditText.setText("%.1f".format(location.xPos))
+                yCoordEditText.setText("%.1f".format(location.yPos))
+            }
+        }
+    }
+
+    override fun onNothingSelected(p0: AdapterView<*>?) {
     }
 }

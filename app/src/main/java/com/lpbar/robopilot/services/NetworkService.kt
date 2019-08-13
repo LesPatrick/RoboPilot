@@ -8,8 +8,8 @@ interface NetworkServiceInterface {
     var port: String
 
     fun sendStopMotorsAction(callback: ((Response) -> Unit), error: ((String) -> Unit))
-    fun sendSaveMapAction(callback: ((Response) -> Unit), error: ((String) -> Unit))
-    fun sendLoadMapAction(callback: ((Response) -> Unit), error: ((String) -> Unit))
+    fun sendSaveMapAction(mapName: String, callback: ((Response) -> Unit), error: ((String) -> Unit))
+    fun sendLoadMapAction(mapName: String, callback: ((Response) -> Unit), error: ((String) -> Unit))
     fun sendStopExplorationAction(callback: ((Response) -> Unit), error: ((String) -> Unit))
     fun sendStartExplorationAction(callback: ((Response) -> Unit), error: ((String) -> Unit))
     fun sendGoToPointAction(x: Double, y: Double, callback: ((Response) -> Unit), error: ((String) -> Unit))
@@ -47,8 +47,8 @@ class NetworkService(
         executeRequest(request, callback, error)
     }
 
-    override fun sendSaveMapAction(callback: (Response) -> Unit, error: (String) -> Unit) {
-        val body: String = "{}"
+    override fun sendSaveMapAction(mapName: String, callback: (Response) -> Unit, error: (String) -> Unit) {
+        val body: String = """"{"name":"$mapName"}"""
         val request = Request.Builder().url(hostAddress + Endpoints.SaveMap.path)
                 .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body))
                 .build()
@@ -56,8 +56,8 @@ class NetworkService(
         executeRequest(request, callback, error)
     }
 
-    override fun sendLoadMapAction(callback: (Response) -> Unit, error: (String) -> Unit) {
-        val body: String = "{}"
+    override fun sendLoadMapAction(mapName: String, callback: (Response) -> Unit, error: (String) -> Unit) {
+        val body: String = """"{"name":"$mapName"}"""
         val request = Request.Builder().url(hostAddress + Endpoints.LoadMap.path)
                 .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body))
                 .build()

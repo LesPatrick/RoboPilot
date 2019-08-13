@@ -79,11 +79,15 @@ class MainActivity : AppCompatActivity(), SteeringFragment.OnFragmentInteraction
     }
 
     private fun onSaveMap() {
-        networkService.sendSaveMapAction(callback = {printResponse(it)}, error = {printMessage(it)})
+        val mapName = locationNameEditText.text.toString()
+        networkService.sendSaveMapAction(mapName, callback = {printResponse(it)}, error = {printMessage(it)})
     }
 
     private fun onLoadMap() {
-        networkService.sendLoadMapAction(callback = {printResponse(it)}, error = {printMessage(it)})
+        locationProvider.models?.let { maps ->
+            val mapName = maps[mapSpinner.selectedItemPosition].name
+            networkService.sendLoadMapAction(mapName, callback = {printResponse(it)}, error = {printMessage(it)})
+        }
     }
 
     private fun onStopExploration() {

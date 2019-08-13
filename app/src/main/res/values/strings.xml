@@ -4,7 +4,7 @@
     <string name="port">Port</string>
     <string name="x_postiton">X Coordinate</string>
     <string name="y_postiton">Y Coordinate</string>
-    <string name="location_name">Location name</string>
+    <string name="location_name">Map name</string>
     <string name="save_location">Save location</string>
     <string name="send">Send</string>
     <string name="stop_motors">Stop motors</string>

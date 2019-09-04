@@ -2,12 +2,10 @@ package com.lpbar.robopilot.services
 
 import okhttp3.*
 import java.io.IOException
-import com.lpbar.robopilot.R.string.send
 import org.jetbrains.anko.doAsync
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
-import java.util.logging.Handler
 
 interface NetworkServiceInterface {
     var address: String

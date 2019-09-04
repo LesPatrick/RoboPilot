@@ -40,6 +40,7 @@ class NetworkService(
 
     override fun sendStopMotorsAction(callback: ((Response) -> Unit), error: ((String) -> Unit)) {
         val body: String = "{}"
+
         val request = Request.Builder().url(hostAddress + Endpoints.StopMotors.path)
                 .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body))
                 .build()
@@ -48,18 +49,24 @@ class NetworkService(
     }
 
     override fun sendSaveMapAction(mapName: String, callback: (Response) -> Unit, error: (String) -> Unit) {
-        val body: String = """"{"name":"$mapName"}"""
+        val body = FormBody.Builder()
+                .add("name", mapName)
+                .build()
+
         val request = Request.Builder().url(hostAddress + Endpoints.SaveMap.path)
-                .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body))
+                .put(body)
                 .build()
 
         executeRequest(request, callback, error)
     }
 
     override fun sendLoadMapAction(mapName: String, callback: (Response) -> Unit, error: (String) -> Unit) {
-        val body: String = """"{"name":"$mapName"}"""
+        val body = FormBody.Builder()
+                .add("name", mapName)
+                .build()
+
         val request = Request.Builder().url(hostAddress + Endpoints.LoadMap.path)
-                .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body))
+                .put(body)
                 .build()
 
         executeRequest(request, callback, error)
@@ -67,6 +74,7 @@ class NetworkService(
 
     override fun sendStartExplorationAction(callback: (Response) -> Unit, error: ((String) -> Unit)) {
         val body: String = "{}"
+
         val request = Request.Builder().url(hostAddress + Endpoints.StartExploration.path)
                 .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body))
                 .build()
@@ -76,6 +84,7 @@ class NetworkService(
 
     override fun sendStopExplorationAction(callback: (Response) -> Unit, error: ((String) -> Unit)) {
         val body: String = "{}"
+
         val request = Request.Builder().url(hostAddress + Endpoints.StopExploration.path)
                 .put(RequestBody.create(MediaType.parse("application/json; charset=utf-8"), body))
                 .build()
@@ -88,6 +97,7 @@ class NetworkService(
                 .add("x", x.toString())
                 .add("y", y.toString())
                 .build()
+
         val request = Request.Builder()
                 .url(hostAddress + Endpoints.ManualPose.path)
                 .put(body)
@@ -114,6 +124,7 @@ class NetworkService(
         val body = FormBody.Builder()
                 .add("name", locationName)
                 .build()
+
         val request = Request.Builder()
                 .url(hostAddress + Endpoints.SaveLocation.path)
                 .put(body)

@@ -2,6 +2,12 @@ package com.lpbar.robopilot.services
 
 import okhttp3.*
 import java.io.IOException
+import com.lpbar.robopilot.R.string.send
+import org.jetbrains.anko.doAsync
+import java.net.DatagramPacket
+import java.net.DatagramSocket
+import java.net.InetAddress
+import java.util.logging.Handler
 
 interface NetworkServiceInterface {
     var address: String
@@ -34,6 +40,8 @@ class NetworkService(
 ) : NetworkServiceInterface {
 
     private val client: OkHttpClient = OkHttpClient()
+
+    private var udpSocket: DatagramSocket = DatagramSocket()
 
     private val hostAddress: String
         get() = "http://$address:$port"
@@ -107,17 +115,18 @@ class NetworkService(
     }
 
     override fun sendManualMotorAction(angle: Double, strength: Double) {
-        val body = FormBody.Builder()
-                .add("angle", angle.toString())
-                .add("strength", strength.toString())
-                .build()
+        val angleStr = angle.toString()
+        val strengthStr = strength.toString()
 
-        val request = Request.Builder()
-                .url(hostAddress + Endpoints.OverrideMotors.path)
-                .put(body)
-                .build()
-
-        executeRequest(request, {}, {})
+        doAsync {
+            try {
+                val buf = "{\"angle\":$angleStr, \"strength\":$strengthStr}".toByteArray()
+                val packet = DatagramPacket(buf, buf.size, InetAddress.getByName(address), 11123)
+                udpSocket.send(packet)
+            } catch (e: Exception) {
+                System.out.println(e.printStackTrace())
+            }
+        }
     }
 
     override fun sendSaveLocation(locationName: String, callback: (Response) -> Unit, error: (String) -> Unit) {
